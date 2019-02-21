@@ -25,7 +25,7 @@ class HomeScreen extends Component {
         >
           <MapView.Marker
             coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-            title={"Hello"}
+            title={<Text></Text>}
             description={"Desc Find Me"}
             onPress={()=>{
               alert("Clicked component")

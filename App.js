@@ -1,8 +1,15 @@
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View,Text } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
-import AppNavigator from './navigation/AppNavigator';
-import HomeScreen from './screens/HomeScreen';
+import MainComponent from './MainComponent'
+
+
+/*
+###   Don't Touch this file !!!
+###   Don't Touch this file !!!
+###   Don't Touch this file !!!
+###   Don't Touch this file !!!
+*/
 
 export default class App extends React.Component {
   state = {
@@ -22,7 +29,7 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <HomeScreen/>
+          <MainComponent/>
         </View>
       );
     }
