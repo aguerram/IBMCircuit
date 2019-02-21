@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Content } from 'native-base';
 import HeaderComp from '../components/HeaderComp';
-
+import {Text} from 'react-native'
 class IndexScreen extends Component {
     constructor(props) {
         super(props);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Content } from 'native-base';
 
-class RepportProblem extends Component {
+class RepportProblemScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {  }
@@ -11,4 +11,4 @@ class RepportProblem extends Component {
     }
 }
  
-export default RepportProblem;
+export default RepportProblemScreen;

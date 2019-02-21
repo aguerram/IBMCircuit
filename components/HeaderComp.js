@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Header } from 'native-base';
+import { Header, Left } from 'native-base';
+import Settings from '../constants/Settings'
+import {Text} from 'react-native'
 
 class HeaderComp extends Component {
     constructor(props) {
@@ -7,8 +9,8 @@ class HeaderComp extends Component {
         this.state = {  }
     }
     render() { 
-        return (<Header>
-            
+        return (<Header style={{marginTop:24}}>
+            <Left><Text>{Settings.title}</Text></Left>
         </Header>);
     }
 }

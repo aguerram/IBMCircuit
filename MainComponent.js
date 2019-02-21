@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Container } from 'native-base';
 import IndexScreen from './screens/IndexScreen';
+import MenuScreen from './screens/MenuScreen'
 import HeaderComp from './components/HeaderComp';
 /**
  * ## page state page numbers, screen equivalant
@@ -21,12 +22,14 @@ class MainComponent extends Component {
         }
     }
     render() { 
-        let Screen = <IndexScreen/>
+        let screen = <IndexScreen/>
         switch(this.state.page)
         {
-            case 1:<IndexScreen/>;break;
+            case 1:screen=<IndexScreen/>;break;
+            case 2:screen=<MenuScreen/> ;break;
         }
         return (<Container>
+            <HeaderComp/>
             <IndexScreen/>
         </Container>);
     }
