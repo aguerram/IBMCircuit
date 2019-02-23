@@ -1,19 +1,38 @@
 import React, { Component } from "react";
-import {
-  Text,
-  View,
-  Image
-} from "react-native";
+import { Text, View, Image } from "react-native";
 import dim from "../constants/Layout";
 import { MapView } from "expo";
-import { MarkerIcon } from "../assets/images/flag-pink.png";
+import { MarkerIcon } from "../assets/images/marker.png";
 import demo from "../constants/Demo";
-import {Icon} from 'native-base'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import {
+  Icon,
+  Card,
+  CardItem,
+  Left,
+  Thumbnail,
+  Body,
+  Footer,
+  Button
+} from "native-base";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      mapType: "hybrid",
+      initRegion: {
+        latitude: 31.5097587,
+        longitude: -9.7761707,
+        latitudeDelta: 0.011,
+        longitudeDelta: 0.011
+      },
+      region:{
+        latitude: 31.5097587,
+        longitude: -9.7761707,
+        latitudeDelta: 0.011,
+        longitudeDelta: 0.011
+      }
+    };
+    this.changeMapType = this.changeMapType.bind(this);
   }
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
@@ -26,61 +45,80 @@ class HomeScreen extends Component {
           error: null
         });
       },
-      error => this.setState({ error: error.message }),
+      error => alert(error.message),
       { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 }
     );
+  }
+  changeMapType() {
+    switch (this.state.mapType) {
+      case "standard":
+        this.setState({ mapType: "satellite" });
+        break;
+      case "satellite":
+        this.setState({ mapType: "hybrid" });
+        break;
+      case "hybrid":
+        this.setState({ mapType: "standard" });
+        break;
+    }
   }
   render() {
     return (
       <View style={{ height: dim.window.height }}>
-        <MapView
-          showsUserLocation={true}
-          followsUserLocation={true}
-          style={{ alignSelf: "stretch", height: dim.window.height }}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-        >
-          {demo.markers.map(el => (
-            <MapView.Marker
-              key={el.id}
-              coordinate={el.coordinate}
-              title={el.title}
-              description={el.description}
-              flat={true}
-              onCalloutPress={() => {
-                alert("Clicked component");
-              }}
-            >
-              <FontAwesome5 name='thumbtack'/>
-            </MapView.Marker>
-          ))}
-          <MapView.Polyline
-            coordinates={demo.cordinantes}
-            strokeColor="#f1c40f" // fallback for when `strokeColors` is not supported by the map-provider
-            strokeColors={[
-              "#7F0000",
-              "#00000000", // no color, creates a "long" gradient between the previous and next coordinate
-              "#B24112",
-              "#E5845C",
-              "#238C23",
-              "#7F0000"
-            ]}
-            strokeWidth={4}
-          />
-          {!!this.state.latitude && !!this.state.longitude && (
-            <MapView.Marker
-              coordinate={{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude
-              }} //Comm
-              title={"Your Location"}
+        <View>
+          <Button
+            onPress={this.changeMapType}
+            style={{ backgroundColor: "#34495e", color: "white" }}
+          >
+            <Text>Change view</Text>
+          </Button>
+          <Button
+            onPress={()=>{
+              this.setState({
+                region:this.state.initRegion
+              })
+            }}
+            style={{ backgroundColor: "#34495e", color: "white" }}
+          >
+            <Text>Back to the region</Text>
+          </Button>
+        </View>
+        <View>
+          <MapView
+            showsUserLocation={true}
+            followsUserLocation={true}
+            mapType={this.state.mapType}
+            style={{ alignSelf: "stretch", height: dim.window.height - 32 }}
+            initialRegion={this.state.initRegion}
+            region={this.state.region}
+          >
+            {demo.circuits[0].markers.map(el => (
+              <MapView.Marker
+                key={el.id}
+                coordinate={el.coordinate}
+                title={el.title}
+                description={el.description}
+                flat={true}
+                onCalloutPress={() => {
+                  alert("Clicked component");
+                }}
+              />
+            ))}
+            <MapView.Polyline
+              coordinates={demo.circuits[0].cordinantes}
+              strokeColor="#e74c3c" // fallback for when `strokeColors` is not supported by the map-provider
+              strokeColors={[
+                "#7F0000",
+                "#00000000", // no color, creates a "long" gradient between the previous and next coordinate
+                "#B24112",
+                "#E5845C",
+                "#238C23",
+                "#7F0000"
+              ]}
+              strokeWidth={4}
             />
-          )}
-        </MapView>
+          </MapView>
+        </View>
       </View>
     );
   }

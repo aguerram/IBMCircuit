@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
-import { Content } from 'native-base';
+import { Content, Button } from 'native-base';
 import HeaderComp from '../components/HeaderComp';
-import {Text} from 'react-native'
+import {Text,Image} from 'react-native'
+import { Actions } from "react-native-router-flux";
+
 class IndexScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {  }
     }
+    componentDidMount() {
+      
+    }
+    
     render() { 
         return (<Content>
-        <Text>Hello world</Text>
+        <Button onPress={()=>{
+            Actions.about()
+        }}><Text>Hello world</Text></Button>
+        
+        <Image source={require('../assets/images/marker.png')} style={{width:64,height:64}}/>
         </Content>);
     }
 }

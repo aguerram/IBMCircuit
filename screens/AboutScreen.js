@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
-import { Content } from 'native-base';
+import { Content, Text } from 'native-base';
 
 class AboutScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {  }
     }
+    componentDidMount() {
+     this.props.initComp()
+    }
+    
     render() { 
-        return (<Content></Content>);
+        return (<Content>
+            <Text>Hello world</Text>
+        </Content>);
     }
 }
  
