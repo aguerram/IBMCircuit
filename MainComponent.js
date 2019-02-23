@@ -3,6 +3,7 @@ import { Container } from 'native-base';
 import IndexScreen from './screens/IndexScreen';
 import MenuScreen from './screens/MenuScreen'
 import HeaderComp from './components/HeaderComp';
+import MapScreen from './screens/MapScreen'
 /**
  * ## page state page numbers, screen equivalant
  * 1- IndexScreen
@@ -30,7 +31,7 @@ class MainComponent extends Component {
         }
         return (<Container>
             <HeaderComp/>
-            <IndexScreen/>
+            <MapScreen/>
         </Container>);
     }
 }
