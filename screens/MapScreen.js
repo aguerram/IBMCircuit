@@ -4,6 +4,8 @@ import dim from "../constants/Layout";
 import { MapView } from "expo";
 import { MarkerIcon } from "../assets/images/marker.png";
 import demo from "../constants/Demo";
+import HeaderComp from "../components/HeaderComp";
+import MapViewDirection from "react-native-maps-directions";
 import {
   Icon,
   Card,
@@ -18,14 +20,14 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapType: "hybrid",
+      mapType: "standard",
       initRegion: {
         latitude: 31.5097587,
         longitude: -9.7761707,
         latitudeDelta: 0.011,
         longitudeDelta: 0.011
       },
-      region:{
+      region: {
         latitude: 31.5097587,
         longitude: -9.7761707,
         latitudeDelta: 0.011,
@@ -33,8 +35,14 @@ class HomeScreen extends Component {
       }
     };
     this.changeMapType = this.changeMapType.bind(this);
+    this.getMyPosition = this.getMyPosition.bind(this);
+    this.changeViewToInitStates = this.changeViewToInitStates.bind(this);
+    this.changeViewToUserLocation = this.changeViewToUserLocation.bind(this);
   }
   componentDidMount() {
+    this.getMyPosition();
+  }
+  getMyPosition() {
     navigator.geolocation.getCurrentPosition(
       position => {
         console.log("wokeeey");
@@ -62,9 +70,25 @@ class HomeScreen extends Component {
         break;
     }
   }
+  changeViewToInitStates() {
+    this.setState({
+      region: this.state.initRegion
+    });
+  }
+  changeViewToUserLocation() {
+    this.setState({
+      region: {
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+        latitudeDelta: 0.011,
+        longitudeDelta: 0.011
+      }
+    });
+  }
   render() {
     return (
       <View style={{ height: dim.window.height }}>
+        <HeaderComp title="Map" />
         <View>
           <Button
             onPress={this.changeMapType}
@@ -73,14 +97,16 @@ class HomeScreen extends Component {
             <Text>Change view</Text>
           </Button>
           <Button
-            onPress={()=>{
-              this.setState({
-                region:this.state.initRegion
-              })
-            }}
+            onPress={this.changeViewToInitStates}
             style={{ backgroundColor: "#34495e", color: "white" }}
           >
             <Text>Back to the region</Text>
+          </Button>
+          <Button
+            onPress={this.changeViewToUserLocation}
+            style={{ backgroundColor: "#34495e", color: "white" }}
+          >
+            <Text>My Location</Text>
           </Button>
         </View>
         <View>
@@ -117,6 +143,17 @@ class HomeScreen extends Component {
               ]}
               strokeWidth={4}
             />
+            {(this.state.latitude && this.state.longitude) && <MapViewDirection
+              origin={{
+                latitude: this.state.latitude,
+                longitude: this.state.longitude
+              }}
+              destination={demo.circuits[0].markers[1].coordinate}
+              apikey={"AIzaSyAnkHzyv-dqcYyC3rRO1fly8Ae5b6jAeMY"}
+              strokeWidth={3}
+              strokeColor="hotpink"
+            />}
+            
           </MapView>
         </View>
       </View>

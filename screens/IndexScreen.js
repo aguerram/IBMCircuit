@@ -9,14 +9,12 @@ class IndexScreen extends Component {
         super(props);
         this.state = {  }
     }
-    componentDidMount() {
-      
-    }
     
     render() { 
         return (<Content>
+        <HeaderComp title="Home"/>
         <Button onPress={()=>{
-            Actions.about()
+            Actions.map()
         }}><Text>Hello world</Text></Button>
         
         <Image source={require('../assets/images/marker.png')} style={{width:64,height:64}}/>
