@@ -7,7 +7,9 @@ class RepportProblemScreen extends Component {
         this.state = {  }
     }
     render() { 
-        return (<Content></Content>);
+        return (<Content style={{margin:20}}>
+            
+        </Content>);
     }
 }
  

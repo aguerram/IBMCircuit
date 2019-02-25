@@ -1,21 +1,14 @@
 import React, { Component } from "react";
-import { Text, View, Image } from "react-native";
+import { View, Animated, Image, Easing } from "react-native";
 import dim from "../constants/Layout";
 import { MapView } from "expo";
 import { MarkerIcon } from "../assets/images/marker.png";
 import demo from "../constants/Demo";
 import HeaderComp from "../components/HeaderComp";
 import MapViewDirection from "react-native-maps-directions";
-import {
-  Icon,
-  Card,
-  CardItem,
-  Left,
-  Thumbnail,
-  Body,
-  Footer,
-  Button
-} from "native-base";
+import uniqueID from "../constants/UniqueID";
+import { Button, Text, Header } from "native-base";
+import { Actions } from "react-native-router-flux";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -32,12 +25,17 @@ class HomeScreen extends Component {
         longitude: -9.7761707,
         latitudeDelta: 0.011,
         longitudeDelta: 0.011
-      }
+      },
+      circuit: 0,
+      currentMarkers: 1,
+      showOptions: false
     };
     this.changeMapType = this.changeMapType.bind(this);
     this.getMyPosition = this.getMyPosition.bind(this);
     this.changeViewToInitStates = this.changeViewToInitStates.bind(this);
     this.changeViewToUserLocation = this.changeViewToUserLocation.bind(this);
+    this.changeTarget = this.changeTarget.bind(this);
+    this.animationValue = new Animated.Value(0)
   }
   componentDidMount() {
     this.getMyPosition();
@@ -45,8 +43,6 @@ class HomeScreen extends Component {
   getMyPosition() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        console.log("wokeeey");
-        console.log(position);
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -69,10 +65,12 @@ class HomeScreen extends Component {
         this.setState({ mapType: "standard" });
         break;
     }
+    this.setState({ showOptions:false});
   }
   changeViewToInitStates() {
     this.setState({
-      region: this.state.initRegion
+      region: this.state.initRegion,
+      showOptions:false
     });
   }
   changeViewToUserLocation() {
@@ -82,33 +80,46 @@ class HomeScreen extends Component {
         longitude: this.state.longitude,
         latitudeDelta: 0.011,
         longitudeDelta: 0.011
-      }
+      },
+      showOptions:false
     });
+  }
+  changeTarget() {
+    if (
+      this.state.currentMarkers <
+      demo.circuits[this.state.circuit].markers.length - 1
+    )
+      this.setState({ currentMarkers: this.state.currentMarkers + 1 ,showOptions:false});
+    else this.setState({ currentMarkers: 0 ,showOptions:false});
   }
   render() {
     return (
       <View style={{ height: dim.window.height }}>
-        <HeaderComp title="Map" />
-        <View>
-          <Button
-            onPress={this.changeMapType}
-            style={{ backgroundColor: "#34495e", color: "white" }}
-          >
-            <Text>Change view</Text>
-          </Button>
-          <Button
-            onPress={this.changeViewToInitStates}
-            style={{ backgroundColor: "#34495e", color: "white" }}
-          >
-            <Text>Back to the region</Text>
-          </Button>
-          <Button
-            onPress={this.changeViewToUserLocation}
-            style={{ backgroundColor: "#34495e", color: "white" }}
-          >
-            <Text>My Location</Text>
-          </Button>
-        </View>
+        <Button
+          full
+          dark
+          onPress={() =>
+            this.setState({ showOptions: !this.state.showOptions })
+          }
+        >
+          <Text>Options</Text>
+        </Button>
+        {this.state.showOptions && (
+          <View>
+            <Button full light onPress={this.changeMapType}>
+              <Text>Change view</Text>
+            </Button>
+            <Button full light onPress={this.changeViewToInitStates}>
+              <Text>Back to the region</Text>
+            </Button>
+            <Button full light onPress={this.changeViewToUserLocation}>
+              <Text>My Location</Text>
+            </Button>
+            <Button onPress={this.changeTarget} full light>
+              <Text>Next Location</Text>
+            </Button>
+          </View>
+        )}
         <View>
           <MapView
             showsUserLocation={true}
@@ -118,7 +129,7 @@ class HomeScreen extends Component {
             initialRegion={this.state.initRegion}
             region={this.state.region}
           >
-            {demo.circuits[0].markers.map(el => (
+            {demo.circuits[this.state.circuit].markers.map(el => (
               <MapView.Marker
                 key={el.id}
                 coordinate={el.coordinate}
@@ -126,13 +137,13 @@ class HomeScreen extends Component {
                 description={el.description}
                 flat={true}
                 onCalloutPress={() => {
-                  alert("Clicked component");
+                  Actions.repport();
                 }}
               />
             ))}
             <MapView.Polyline
-              coordinates={demo.circuits[0].cordinantes}
-              strokeColor="#e74c3c" // fallback for when `strokeColors` is not supported by the map-provider
+              coordinates={demo.circuits[this.state.circuit].cordinantes}
+              strokeColor="#2980b9" // fallback for when `strokeColors` is not supported by the map-provider
               strokeColors={[
                 "#7F0000",
                 "#00000000", // no color, creates a "long" gradient between the previous and next coordinate
@@ -141,19 +152,26 @@ class HomeScreen extends Component {
                 "#238C23",
                 "#7F0000"
               ]}
-              strokeWidth={4}
-            />
-            {(this.state.latitude && this.state.longitude) && <MapViewDirection
-              origin={{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude
-              }}
-              destination={demo.circuits[0].markers[1].coordinate}
-              apikey={"AIzaSyAnkHzyv-dqcYyC3rRO1fly8Ae5b6jAeMY"}
               strokeWidth={3}
-              strokeColor="hotpink"
-            />}
-            
+            />
+            {this.state.latitude && this.state.longitude && (
+              <MapViewDirection
+                origin={{
+                  latitude: this.state.latitude,
+                  longitude: this.state.longitude
+                }}
+                destination={
+                  demo.circuits[this.state.circuit].markers[
+                    this.state.currentMarkers
+                  ].coordinate
+                }
+                apikey={"AIzaSyAnkHzyv-dqcYyC3rRO1fly8Ae5b6jAeMY"}
+                strokeWidth={3}
+                strokeColor="hotpink"
+                mode="walking"
+                optimizeWaypoints
+              />
+            )}
           </MapView>
         </View>
       </View>

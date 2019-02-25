@@ -6,7 +6,7 @@ let demo = {
           id: 1,
           title: "Le Port de Essaouira",
           description: "Desc ... show more",
-          coordinate: { latitude:31.5097587, longitude: -9.7761707 }
+          coordinate: { latitude: 31.50929, longitude: -9.774396 }
         },
         {
           id: 2,
@@ -19,15 +19,14 @@ let demo = {
           title: "Place Molay El Hassan",
           description: "Desc 2... show more",
           coordinate: { latitude: 31.5115703, longitude: -9.7720798 }
-        },
+        }
       ],
       cordinantes: [
-        { latitude:31.5097587, longitude: -9.7761707 },
+        { latitude: 31.50929, longitude: -9.774396 },
         { latitude: 31.510302, longitude: -9.774237 },
-        { latitude: 31.5115703, longitude: -9.7720798 },
+        { latitude: 31.5115703, longitude: -9.7720798 }
       ]
-    },
-
+    }
   ]
 };
 export default demo;

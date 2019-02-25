@@ -4,8 +4,11 @@ import IndexScreen from "./screens/IndexScreen";
 import MenuScreen from "./screens/MenuScreen";
 import HeaderComp from "./components/HeaderComp";
 import MapScreen from "./screens/MapScreen";
-import { Router, Stack, Scene ,Modal} from "react-native-router-flux";
-import AboutScreen from './screens/AboutScreen';
+import { Router, Stack, Scene, Drawer } from "react-native-router-flux";
+import AboutScreen from "./screens/AboutScreen";
+import Links from "./constants/LinksName";
+import RepportProblemScreen from "./screens/RepportProblemScreen";
+import ChatbotScreen from "./screens/ChatbotScreen";
 /**
  * ## page state page numbers, screen equivalant
  * 1- IndexScreen
@@ -21,18 +24,45 @@ class MainComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title:'Home'
+      title: "Home"
     };
   }
+
   render() {
-    let screen = <IndexScreen />;
     return (
       <Container>
         <Router>
-          <Stack hideNavBar key="root">
-            <Scene key="index" component={IndexScreen} title="Home" />
-            <Scene initial key="map" component={MapScreen} title="Map" />
-            <Scene key="about" component={AboutScreen} />
+          <Stack key="root">
+            <Drawer
+              hideNavBar
+              key="drawerMenu"
+              contentComponent={MenuScreen}
+              drawerWidth={250}
+              drawerPosition="left"
+            >
+              <Scene
+                initial
+                key={Links.chat}
+                component={ChatbotScreen}
+                title="Home"
+              />
+              <Scene
+                key={Links.index}
+                component={IndexScreen}
+                title="Circuits"
+              />
+              <Scene key={Links.map} component={MapScreen} title="Map" />
+              <Scene
+                key={Links.about}
+                component={AboutScreen}
+                title="About us"
+              />
+              <Scene
+                key={Links.repport}
+                component={RepportProblemScreen}
+                title="Repport problems"
+              />
+            </Drawer>
           </Stack>
         </Router>
       </Container>
