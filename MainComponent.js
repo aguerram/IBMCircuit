@@ -9,6 +9,7 @@ import AboutScreen from "./screens/AboutScreen";
 import Links from "./constants/LinksName";
 import RepportProblemScreen from "./screens/RepportProblemScreen";
 import ChatbotScreen from "./screens/ChatbotScreen";
+import WebViewScreen from "./screens/WebViewScreen";
 /**
  * ## page state page numbers, screen equivalant
  * 1- IndexScreen
@@ -60,7 +61,12 @@ class MainComponent extends Component {
               <Scene
                 key={Links.repport}
                 component={RepportProblemScreen}
-                title="Repport problems"
+                title="More informations"
+              />
+              <Scene
+                key="webview"
+                component={WebViewScreen}
+                title="Location"
               />
             </Drawer>
           </Stack>

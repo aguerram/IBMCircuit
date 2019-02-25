@@ -1,14 +1,21 @@
-import React from 'react'
-import {GiftedChat} from 'react-native-gifted-chat'
-import IconBot from '../assets/images/bot.png'
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import {View , Platform, Animated} from 'react-native';
-const link = "http://192.168.43.246:3000"
+import React from "react";
+import { GiftedChat } from "react-native-gifted-chat";
+import IconBot from "../assets/images/bot.png";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+import { View, Platform, Animated,Linking } from "react-native";
+import { Button, Text } from "native-base";
+import { Actions } from "react-native-router-flux";
+const link = "http://192.168.0.138:3000";
 export default class ChatbotScreen extends React.Component {
   state = {
     messages: [],
+    link: null,
+    circuit:null
+  };
+  constructor(props) {
+    super(props);
+    this.answerDemo = this.answerDemo.bind(this);
   }
-
   prepareMessagesContainerHeight(value) {
     if (this.props.isAnimated === true) {
       return new Animated.Value(value);
@@ -18,17 +25,19 @@ export default class ChatbotScreen extends React.Component {
 
   onKeyboardWillShow(e) {
     this.setIsTypingDisabled(true);
-    this.setKeyboardHeight(e.endCoordinates ? e.endCoordinates.height : e.end.height);
+    this.setKeyboardHeight(
+      e.endCoordinates ? e.endCoordinates.height : e.end.height
+    );
     this.setBottomOffset(this.props.bottomOffset);
     const newMessagesContainerHeight = this.getMessagesContainerHeightWithKeyboard();
     if (this.props.isAnimated === true) {
       Animated.timing(this.state.messagesContainerHeight, {
         toValue: newMessagesContainerHeight,
-        duration: 210,
+        duration: 210
       }).start();
     } else {
       this.setState({
-        messagesContainerHeight: newMessagesContainerHeight,
+        messagesContainerHeight: newMessagesContainerHeight
       });
     }
   }
@@ -41,11 +50,11 @@ export default class ChatbotScreen extends React.Component {
     if (this.props.isAnimated === true) {
       Animated.timing(this.state.messagesContainerHeight, {
         toValue: newMessagesContainerHeight,
-        duration: 210,
+        duration: 210
       }).start();
     } else {
       this.setState({
-        messagesContainerHeight: newMessagesContainerHeight,
+        messagesContainerHeight: newMessagesContainerHeight
       });
     }
   }
@@ -55,70 +64,127 @@ export default class ChatbotScreen extends React.Component {
       messages: [
         {
           _id: 1,
-          text: 'Hello! Ask me and I will answer you.',
+          text: "Hello! Ask me and I will answer you.",
           createdAt: new Date(),
           user: {
             _id: 2,
-            name: 'Bot',
-            avatar: IconBot,
-          },
-        },
-      ],
-    })
+            name: "Bot",
+            avatar: IconBot
+          }
+        }
+      ]
+    });
   }
 
   onSend(messages = []) {
-
-    fetch(link,{
-      headers:{
-        "Accept":"application/json",
-        "Content-type":"application/json"
+    fetch(link, {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json"
       },
-      method:"post",
-      body:JSON.stringify({ msg:messages[0].text})
+      method: "post",
+      body: JSON.stringify({ msg: messages[0].text })
     })
-    .then(res=>res.json())
-    .then(res=>{
-      console.log()
-      if(res.success)
-      {
-        let resp = res.data.output.text[0]
-        this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, messages),
-        }))
-        messages[0].text = 
-        console.log(res.data)
-        this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, messages),
-        }))
-      }
-      else{
-        alert("Message not sent")
-      }
-    })
-    .catch(err=>{
-      alert("Error")
-      console.log(err)
-    })
+      .then(res => res.json())
+      .then(res => {
+        console.log();
+        if (res.success) {
+          this.setState(previousState => ({
+            messages: GiftedChat.append(previousState.messages, messages)
+          }));
+          this.answerDemo(messages, res.data.output.text[0]);
+        } else {
+          alert("Message not sent");
+        }
+      })
+      .catch(err => {
+        alert("Error");
+        console.log(err);
+      });
   }
-
+  answerDemo(messages, msg) {
+    if (messages.length > 0) {
+      this.setState(previousState => {
+        return {
+          typingText: "Bot is typing"
+        };
+      });
+    }
+    setTimeout(() => {
+      if (true) {
+        if (messages.length > 0) {
+          if (messages[0].image) {
+            this.onReceive("Nice picture!");
+          } else if (messages[0].location) {
+            this.onReceive("My favorite place");
+          } else {
+            if (!this._isAlright) {
+              if (msg.indexOf("/map:") > -1) {
+                let link = msg.substr(
+                  msg.indexOf("/map:") + "/map:".length,
+                  msg.length
+                );
+                let newmsg = msg.substr(0, msg.indexOf("/map:"));
+                this.setState({
+                  link: link
+                });
+                msg = newmsg;
+                this.setState({ circuit: false });
+              }
+              else if(map.indexOf('')>-1)
+              {
+                this.setState({ circuit: true });
+              }
+              else{
+                this.setState({ circuit: false });
+              }
+              this.onReceive(msg);
+            }
+          }
+        }
+      }
+    });
+  }
+  onReceive(text) {
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, {
+          _id: Math.round(Math.random() * 1000000),
+          text: text,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: "Bot",
+            avatar: IconBot
+          }
+        })
+      };
+    });
+  }
+  v;
   render() {
     return (
-      
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <GiftedChat
           messages={this.state.messages}
-          onSend={newMessages => {this.onSend(newMessages);} }
+          onSend={newMessages => {
+            this.onSend(newMessages);
+          }}
           user={{
-              _id: 1,
+            _id: 1
           }}
           renderAvatarOnTop={true}
           renderUsernameOnMessage={true}
+          
+          onPressAvatar={() => {
+            if(this.state.circuit == true)
+              Actions.index()
+            if (this.state.link != null)
+              Linking.openURL(this.state.link).catch((err)=>console.log(err))
+          }}
         />
-        {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
-    </View>
-     
-      
-    )
+        {Platform.OS === "android" ? <KeyboardSpacer /> : null}
+      </View>
+    );
   }
 }

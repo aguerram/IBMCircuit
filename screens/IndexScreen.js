@@ -25,7 +25,7 @@ class IndexScreen extends Component {
             }}
           >
             <Icon name="map" />
-            <Text>Circuit 1</Text>
+            <Text>Dans L’ancienne Médina</Text>
           </Button>
         </View>
 
@@ -38,7 +38,7 @@ class IndexScreen extends Component {
             }}
           >
             <Icon name="map" />
-            <Text>Circuit 2</Text>
+            <Text>Circuit Des Galeries</Text>
           </Button>
         </View>
 
@@ -51,7 +51,7 @@ class IndexScreen extends Component {
             }}
           >
             <Icon name="map" />
-            <Text>Circuit 3</Text>
+            <Text>Circuit  Dromadaire</Text>
           </Button>
         </View>
         <View style={{margin:pad}}>
@@ -63,7 +63,7 @@ class IndexScreen extends Component {
             }}
           >
             <Icon name="map"/>
-            <Text>Circuit 4</Text>
+            <Text>Circuits Arrière Pays</Text>
           </Button>
         </View>
       </Content>
