@@ -5,7 +5,8 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import { View, Platform, Animated,Linking } from "react-native";
 import { Button, Text } from "native-base";
 import { Actions } from "react-native-router-flux";
-const link = "http://192.168.0.138:3000";
+import settings from '../constants/Settings'
+const link = settings.linkAddrs
 export default class ChatbotScreen extends React.Component {
   state = {
     messages: [],
@@ -131,7 +132,7 @@ export default class ChatbotScreen extends React.Component {
                 msg = newmsg;
                 this.setState({ circuit: false });
               }
-              else if(map.indexOf('')>-1)
+              else if(msg.indexOf('(circuit tours)')>-1)
               {
                 this.setState({ circuit: true });
               }
@@ -179,6 +180,7 @@ export default class ChatbotScreen extends React.Component {
           onPressAvatar={() => {
             if(this.state.circuit == true)
               Actions.index()
+            else
             if (this.state.link != null)
               Linking.openURL(this.state.link).catch((err)=>console.log(err))
           }}
