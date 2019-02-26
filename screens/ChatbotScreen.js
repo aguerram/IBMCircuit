@@ -112,6 +112,7 @@ export default class ChatbotScreen extends React.Component {
       });
     }
     setTimeout(() => {
+
       if (true) {
         if (messages.length > 0) {
           if (messages[0].image) {
@@ -185,6 +186,7 @@ export default class ChatbotScreen extends React.Component {
               Linking.openURL(this.state.link).catch((err)=>console.log(err))
           }}
         />
+
         {Platform.OS === "android" ? <KeyboardSpacer /> : null}
       </View>
     );

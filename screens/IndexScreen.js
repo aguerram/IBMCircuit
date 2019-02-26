@@ -21,7 +21,7 @@ class IndexScreen extends Component {
             block
             light
             onPress={() => {
-              Actions.map();
+              Actions.map({prop:1});
             }}
           >
             <Icon name="map" />
